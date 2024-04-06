@@ -2,6 +2,8 @@
 import cv2
 import Model
 import View
+import os
+
 class Controller:
     def __init__(self,path):
         self.path = path
