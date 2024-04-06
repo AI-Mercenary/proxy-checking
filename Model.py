@@ -2,7 +2,7 @@
 import cv2
 import numpy as np
 import mediapipe as mp
-import controller as controller
+import Controller as controller
 class Model:
     def __init__(self,path):
         self.path=path
@@ -10,7 +10,7 @@ class Model:
         self.faces=[]
         
         
-    def model(self):
+    def cheking_function(self):
         frame_count = 1
         cap = cv2.VideoCapture(self.path)
         lst, grp, a, em = [], [], 0, []
