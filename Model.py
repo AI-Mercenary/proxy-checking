@@ -1,17 +1,19 @@
 #model
 import cv2
+import os
 import numpy as np
 import mediapipe as mp
-import Controller as controller
 
 class Model:
     def __init__(self,path):
         self.path=path
+        self.output_path = "H:/proxy/screenshots"
         self.facing=[]
         self.faces=[]
         
         
     def cheking_function(self):
+        
         frame_count = 1
         cap = cv2.VideoCapture(self.path)
         lst, grp, a, em = [], [], 0, []
@@ -88,8 +90,8 @@ class Model:
 
                     if prev_gaze != text:
                         if text != "Forward":
-                            controller.image_screenshot(image,frame_count)
-                            frame=controller.frame2time(frame_count)
+                            self.image_screenshot(image,frame_count)
+                            frame=self.frame2time(frame_count)
                             self.facing.append(f"not facing the cam:, {frame} ")  # not facing cam
 
                     prev_gaze = text
@@ -116,8 +118,8 @@ class Model:
                         lst.append(0)
                     else:
                         lst.append(1)
-                        controller.image_screenshot(image,frame_count)
-                        frame=controller.frame2time(frame_count)
+                        self.image_screenshot(image,frame_count)
+                        frame=self.frame2time(frame_count)
                         self.faces.append(f"multiple-faces: , {frame}")  # multi
 
             cv2.imshow('Head Pose Estimation', image)
@@ -138,3 +140,18 @@ class Model:
                     grp.append(0)
                 a = 0
         return grp,grp.count(1),self.faces,self.facing
+
+    def image_screenshot(self,image,frame_count):
+        image_screenshot = image.copy()
+        screenshot_filename = f"frame_{frame_count}.jpg"
+        screenshot_filepath = os.path.join(self.output_path, screenshot_filename)
+        cv2.imwrite(screenshot_filepath, image_screenshot)
+        return
+                    
+                    
+    def frame2time(self,frame_count, frames_per_second=60):
+        total_seconds = frame_count / frames_per_second
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        remaining_frames = int(frame_count % frames_per_second)
+        return minutes, seconds, remaining_frames

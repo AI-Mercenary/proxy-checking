@@ -1,5 +1,4 @@
-import Controller
-
+from Controller import Controller
 
 
 def main():
@@ -7,4 +6,7 @@ def main():
     controller=Controller(video_path)
     timestamp=controller.check()
     print(timestamp)
-    print("end!!")
+    
+    
+if __name__=="__main__":
+    main()

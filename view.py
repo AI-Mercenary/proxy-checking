@@ -1,14 +1,10 @@
 #view
 class View:
-    def __init__(self,grp,grp_count,faces,facing):
-        self.grp=grp
-        self.grp_count=grp_count
-        self.faces=faces
-        self.facing=facing
+    def __init__(self):
+        self.timestamps={}
         
-    def display(self):
-        timestamps={}
-        timestamps["camera_facing"]=self.facing
-        timestamps["multiple_faces"]=self.faces
-        timestamps["grp"]=self.grps
-        return timestamps
+    def display(self,grp,grp_count,faces,facing):
+        self.timestamps["camera_facing"]=facing
+        self.timestamps["multiple_faces"]=faces
+        self.timestamps["grp"]=grp
+        return self.timestamps
