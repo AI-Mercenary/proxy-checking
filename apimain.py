@@ -156,7 +156,6 @@ async def path(body: dict):
                 grp.append(0)
             a = 0
 
-    print("-------------------------")
     print(grp)
     print(grp.count(1))
     print(f"facing: {facing} face: {faces},grp: {grp},grp.count(1): {grp.count(1)}")

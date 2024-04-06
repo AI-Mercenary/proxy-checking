@@ -151,7 +151,6 @@ for i in range(len(lst)):
             grp.append(0)
         a = 0
 
-print("-------------------------")
 print(grp)
 print(grp.count(1))
 
