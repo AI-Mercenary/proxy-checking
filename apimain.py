@@ -9,7 +9,14 @@ print(os.path.abspath(mp.__file__))
 faces = []
 facing = []
 
-
+def image_screenshot(image,frame_count,output_path):
+    image_screenshot = image.copy()
+    screenshot_filename = f"frame_{frame_count}.jpg"
+    screenshot_filepath = os.path.join(output_path, screenshot_filename)
+    cv2.imwrite(screenshot_filepath, image_screenshot)
+    return screenshot_filepath
+                
+                
 def frame2time(frame_count, frames_per_second=60):
     total_seconds = frame_count / frames_per_second
     minutes = int(total_seconds // 60)
@@ -21,6 +28,7 @@ def frame2time(frame_count, frames_per_second=60):
 @app.get("/path")
 async def path(body: dict):
     video_path = str(body.get("path"))
+    output_path="H:/proxy/screenshots"
     pr_tm = 0
     frame_count = 1
     cap = cv2.VideoCapture(video_path)
@@ -100,7 +108,7 @@ async def path(body: dict):
 
                 if prev_gaze != text:
                     if text != "Forward":
-                        print("not facing the cam:", frame2time(frame_count))
+                        image_screenshot(image,frame_count,output_path)
                         facing.append(f"not facing the cam:, {frame2time(frame_count)} ")  # not facing cam
 
                 prev_gaze = text
@@ -127,7 +135,7 @@ async def path(body: dict):
                     lst.append(0)
                 else:
                     lst.append(1)
-                    print("multiple-faces: ", frame2time(frame_count))
+                    image_screenshot(image,frame_count,output_path)
                     faces.append(f"multiple-faces: , {frame2time(frame_count)}")  # multi
 
         cv2.imshow('Head Pose Estimation', image)
@@ -156,7 +164,8 @@ async def path(body: dict):
     return {
         "facing": facing,
         "face": faces,
-        "grp": grp
+        "grp": grp,
+        "screenshots":output_path
     }
 
 
