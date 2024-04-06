@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import mediapipe as mp
 import Controller as controller
+
 class Model:
     def __init__(self,path):
         self.path=path

@@ -1,7 +1,6 @@
 #controller
 import cv2
 import Model
-import os
 import View
 class Controller:
     def __init__(self,path):
@@ -9,10 +8,12 @@ class Controller:
         self.output_path = "D:/sem 4-2/External Internship/project 5/User Analytics/proxy-checking/screenshots"
         self.model = Model(path)
         self.view = View()
+        
     def check(self):
         grp,grp_count,faces,facing = self.model.checking_function()
         time_stamp = self.view.display(grp,grp_count,faces,facing)
         return time_stamp
+    
     def image_screenshot(self,image,frame_count):
         image_screenshot = image.copy()
         screenshot_filename = f"frame_{frame_count}.jpg"
