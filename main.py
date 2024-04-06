@@ -134,10 +134,7 @@ while cap.isOpened():
 
     cv2.imshow('Head Pose Estimation', image)
     frame_count += 1
-    
-    # # Save screenshot of the frame
-    # cv2.imwrite(output_path + f"frame_{frame_count}.jpg", image_screenshot)
-    # pr_tm = tm
+
     if cv2.waitKey(5) & 0xFF == 27:
         break
     

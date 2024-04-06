@@ -160,7 +160,6 @@ async def path(body: dict):
     print(grp)
     print(grp.count(1))
     print(f"facing: {facing} face: {faces},grp: {grp},grp.count(1): {grp.count(1)}")
-    print(facing, faces, grp)
     return {
         "facing": facing,
         "face": faces,
@@ -172,5 +171,4 @@ async def path(body: dict):
 # Run the FastAPI app
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="localhost", port=8000)
