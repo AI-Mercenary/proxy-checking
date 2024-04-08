@@ -5,17 +5,18 @@ import numpy as np
 import mediapipe as mp
 
 class Model:
-    def __init__(self,path):
-        self.path=path
-        self.output_path = "H:/proxy/screenshots"
-        self.facing=[]
-        self.faces=[]
+    def __init__(self):
+        self.output_path="H:/proxy/screenshots"
+        self.faces={
+            "cam-facing":{},
+            "multi-faces":{}
+        }
         
         
-    def cheking_function(self):
-        
+    def cheking_function(self,downloaded_file_path,database):
+        i,j=0,0
         frame_count = 1
-        cap = cv2.VideoCapture(self.path)
+        cap = cv2.VideoCapture(downloaded_file_path)
         lst, grp, a, em = [], [], 0, []
         lasting_frames = 5
         prev_gaze = None
@@ -90,9 +91,10 @@ class Model:
 
                     if prev_gaze != text:
                         if text != "Forward":
-                            self.image_screenshot(image,frame_count)
-                            frame=self.frame2time(frame_count)
-                            self.facing.append(f"not facing the cam:, {frame} ")  # not facing cam
+                            self.image_screenshot(image,frame_count,database)
+                            min,sec,remf=self.frame2time(frame_count)
+                            self.faces["cam-facing"][i]=f"time: {min}:{sec}, {remf}"
+                            i+=1
 
                     prev_gaze = text
 
@@ -118,9 +120,10 @@ class Model:
                         lst.append(0)
                     else:
                         lst.append(1)
-                        self.image_screenshot(image,frame_count)
-                        frame=self.frame2time(frame_count)
-                        self.faces.append(f"multiple-faces: , {frame}")  # multi
+                        self.image_screenshot(image,frame_count,database)
+                        min,sec,remf=self.frame2time(frame_count)
+                        self.faces["multi-faces"][j]=f"time: {min}:{sec}, {remf}"
+                        j+=1
 
             cv2.imshow('Head Pose Estimation', image)
             frame_count += 1
@@ -139,13 +142,14 @@ class Model:
                 else:
                     grp.append(0)
                 a = 0
-        return grp,grp.count(1),self.faces,self.facing
+        return grp,self.faces
 
-    def image_screenshot(self,image,frame_count):
+    def image_screenshot(self,image,frame_count,database):
         image_screenshot = image.copy()
         screenshot_filename = f"frame_{frame_count}.jpg"
         screenshot_filepath = os.path.join(self.output_path, screenshot_filename)
         cv2.imwrite(screenshot_filepath, image_screenshot)
+        msg=database.upload_to_blob_storage(screenshot_filepath,screenshot_filename)
         return
                     
                     
