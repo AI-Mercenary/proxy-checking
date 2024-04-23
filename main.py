@@ -1,31 +1,32 @@
 from Controller import Controller,Database
-
-
-def upload_video():
-    database=Database()
-    video_path="C:/Users/harsh/OneDrive/Desktop/WhatsApp Video 2024-04-08 at 16.33.56_6fb5770d.mp4"
-    file_name="testfile asraf"
-    database.upload_to_blob_storage(video_path,file_name) 
-    return file_name 
+import re
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+import tensorflow as tf
+# Restrict TensorFlow to use only CPU devices
+tf.config.experimental.set_visible_devices([], 'GPU')
       
 def delete_files():
         database=Database()
         database.delete_blob_from_storage()
-        
+       
 def main():
-    local=True
+    local=False
     controller=Controller()
     database=Database()
     if local:
-        file_name=upload_video()
+        video_path="H:/proxy/videos/interview.mp4"
+        match = re.search(r'[^/]+\.mp4$', video_path)
+        file_name = match.group(0)
+        database.upload_to_blob_storage(video_path,file_name) 
         filepath=database.get_video(file_name,"local")
     else:
-        filename="6603e300f1a59bbcdc0d711e.webm"
+        filename="65fe63139ec3e5b8f2de262b.webm"
         filepath=database.get_video(filename,"reaidy")
     timestamp=controller.check(filepath)
     for key in timestamp:
         print(key,timestamp[key])
-    
+        
     
 if __name__=="__main__":
     main()

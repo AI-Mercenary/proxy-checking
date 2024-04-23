@@ -1,8 +1,11 @@
 #controller
-from Model import Model
+from Model import Model,SpeakerDetection
 from View import View
 import os
 from azure.storage.blob import BlobServiceClient
+
+
+
 
 proxy_account_name="proxychecking"
 proxy_account_key="MrArpUhcuURHmC4oCqAnxTCjOC1rJTa7f2DiNXHWmqh24E4mo1dHMPu8FqF4ISrGfMNARATw0q6w+AStW51h6g=="
@@ -23,7 +26,10 @@ class Controller:
     def check(self,filepath):
         grp,faces = self.model.cheking_function(filepath,self.database)
         urls=self.database.get_image_url()
-        time_stamp = self.view.display(grp,faces,urls)
+        self.audio=SpeakerDetection(filepath)
+        self.audio.extract_audio_from_video()
+        msg,timings=self.audio.detect_multiple_speakers()
+        time_stamp = self.view.display(grp,faces,urls,msg,timings)
         return time_stamp
     
 
@@ -60,7 +66,8 @@ class Database:
         
     
     def delete_blob_from_storage(self):
-        screenshots=self.get_filenames_from_azure
+        screenshots=self.get_filenames_from_azure()
+        print(screenshots)
         for file_name in screenshots:
             blob_client = self.proxy_blob_service_client.get_blob_client(container=self.proxy_container_name, blob=file_name)
             try:
@@ -71,7 +78,7 @@ class Database:
             except Exception as e:
                 msg=f"Error deleting {file_name} file."
             print(msg)
-            return msg
+        return msg
         
     def get_filenames_from_azure(self):
         return [blob.name for blob in self.proxy_container_client.list_blobs()]
@@ -102,5 +109,6 @@ class Database:
         for i in screenshots:
             urls.append(self.proxy_base_url + i)
         return urls
+    
 
     
