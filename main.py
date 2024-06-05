@@ -12,12 +12,10 @@ def delete_files():
        
 def main():
     local=True
-    local=True
     controller=Controller()
     database=Database()
     if local:
-        video_path=input("enter path")  #"H:\proxy\65fe63139ec3e5b8f2de262b.webm"
-        video_path=input("enter path")  #"H:\proxy\proxy.mp4"
+        video_path=input("enter path")  #"H:/proxy/proxy.mp4"
         match = re.search(r'[^/]+\.mp4$', video_path)
         file_name = match.group(0)
         database.upload_to_blob_storage(video_path,file_name) 
