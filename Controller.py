@@ -1,21 +1,25 @@
 #controller
+from filecmp import cmp
 from Model import Model,SpeakerDetection
 from View import View
 import os
 from azure.storage.blob import BlobServiceClient
+from dotenv import load_dotenv
 
+load_dotenv()
 
+proxy_account_name = os.getenv("proxy_account_name")
+proxy_account_key = os.getenv('proxy_account_key')
+proxy_container_name = os.getenv("proxy_container_name")
+api_base_url = os.getenv("api_base_url")
+reaidy_account_name = os.getenv("reaidy_account_name")
+reaidy_account_key = os.getenv("reaidy_account_key")
+reaidy_container_name = os.getenv("reaidy_container_name")
+reaidy_account_name = os.getenv("reaidy_account_name")
 
-
-proxy_account_name="proxychecking"
-proxy_account_key="MrArpUhcuURHmC4oCqAnxTCjOC1rJTa7f2DiNXHWmqh24E4mo1dHMPu8FqF4ISrGfMNARATw0q6w+AStW51h6g=="
-proxy_container_name="screenshots"
 proxy_connect_str = f"DefaultEndpointsProtocol=https;AccountName={proxy_account_name};AccountKey={proxy_account_key};EndpointSuffix=core.windows.net"
-
-reaidy_account_name="reaidystorage"
-reaidy_account_key="s5GikSOTgzRkzXQOMmwlmMeOn/5dlLocXGyccCR+Z10hWptcDWw8JsLl02pOYkprjbNfAOTgCRo9+AStKWz/2A=="
-reaidy_container_name="recordings"
 reaidy_connect_str = f"DefaultEndpointsProtocol=https;AccountName={reaidy_account_name};AccountKey={reaidy_account_key};EndpointSuffix=core.windows.net"
+
 
 class Controller:
     def __init__(self):
@@ -90,18 +94,22 @@ class Database:
                 container=self.reaidy_container_name,
                 blob=file_name
             )
+            print(f"Video '{file_name}' downloaded from Reaidy (webm).")
         else:
             blob_client = self.proxy_blob_service_client.get_blob_client(
                 container=self.proxy_container_name,
                 blob=file_name
             )
+            print(f"Video '{file_name}' downloaded(mp4).")
 
         with open(file_name, "wb") as f:
             download_stream = blob_client.download_blob()
             download_stream.readinto(f)
 
-        print(f"Video '{file_name}' downloaded successfully.")
+
         return file_name
+    
+
     
     def get_image_url(self):
         urls=[]

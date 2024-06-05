@@ -9,3 +9,4 @@ librosa
 azure.storage.blob
 moviepy.editor
 scipy.signal
+python-dotenv

@@ -11,13 +11,14 @@ from scipy.signal import find_peaks
 import re
 class Model:
     def __init__(self):
-        self.output_path = "H:/proxy/screenshots"
         self.faces = {
             "cam-facing": {},
             "multi-faces": {}
         }
+        self.output_path=""
 
     def cheking_function(self, downloaded_file_path, database):
+        self.output_path=downloaded_file_path
         i, j = 0, 0
         frame_count = 1
         cap = cv2.VideoCapture(downloaded_file_path)
@@ -182,11 +183,11 @@ class SpeakerDetection:
         if "webm" in video_path:
             match = re.search(r'([^/]+)\.webm$', video_path)
             self.audio_name = f"{match.group(1)}.wav"
-            print(self.audio_name)
+            print(self.audio_name,"webm")
         else:
             match = re.search(r'([^/]+)\.mp4$', video_path)
             self.audio_name = f"{match.group(1)}.wav"
-            print(self.audio_name)
+            print(self.audio_name,'mp4')
 
     def extract_audio_from_video(self):
         try:
@@ -205,7 +206,7 @@ class SpeakerDetection:
     def detect_multiple_speakers(self, frame_length=2048):
         # Load audio
         audio_samples, sample_rate = librosa.load(self.audio_name, sr=None, mono=True)
-
+        print("detection started")
         # Calculate energy
         energy = self.calculate_energy(audio_samples, frame_length)
         mean_energy=np.mean(energy)
@@ -232,8 +233,7 @@ class SpeakerDetection:
             msg="Multiple"
         else:
             msg="Single"
-            
-        
+        print("detection ended",msg)
         # Calculate timestamps of the detected proxies
         timestamps = [peak * frame_length / sample_rate for peak in filtered_peaks]
 

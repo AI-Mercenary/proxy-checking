@@ -11,18 +11,18 @@ def delete_files():
         database.delete_blob_from_storage()
        
 def main():
-    local=False
+    local=True
     controller=Controller()
     database=Database()
     if local:
-        video_path="H:/proxy/videos/interview.mp4"
+        video_path=input("enter path")  #"H:\proxy\proxy.mp4"
         match = re.search(r'[^/]+\.mp4$', video_path)
         file_name = match.group(0)
         database.upload_to_blob_storage(video_path,file_name) 
         filepath=database.get_video(file_name,"local")
-    else:
-        filename="65fe63139ec3e5b8f2de262b.webm"
-        filepath=database.get_video(filename,"reaidy")
+    # else:
+    #     filename="662759c742a4395a14b7db12.webm"
+    #     filepath=database.get_video(filename,"reaidy")
     timestamp=controller.check(filepath)
     for key in timestamp:
         print(key,timestamp[key])
